@@ -1,7 +1,7 @@
 SpaApp.Views.TodosIndex = Backbone.View.extend({
   events: {
     'submit #addTodo'   :'add_todo',
-    'click .delete_todo':'delete_todo'
+    'click #removeTodo':'remove_todo'
   },
   id: 'todos',
   template: HandlebarsTemplates['todos/index'],
@@ -35,6 +35,18 @@ SpaApp.Views.TodosIndex = Backbone.View.extend({
     }).done(function(responseData){
       var todoHTML = HandlebarsTemplates['todos/show'](responseData);
       _this.$el.append(todoHTML);
+    });
+  },
+  remove_todo: function(event) {
+    var _this = this;
+    event.preventDefault();
+    var _event = event;
+    var id = $(event.target.parentElement).attr('data-id');
+    $.ajax({
+      method: 'delete',
+      url   : '/todos/' + id + '.json'
+    }).done(function(data){
+      _event.target.parentElement.remove();
     });
   }
 });
