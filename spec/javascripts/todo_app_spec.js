@@ -45,13 +45,28 @@ describe('Todo App', function() {
 
   describe('removing an existing todo', function() {
     it('should remove the item from the list of todos', function () {
-      pending();
+       spyOn($,'ajax').and.callFake(function (req) {
+          expect(req.url).toEqual('/todos/' + todos[0].id + '.json');
+          var d = $.Deferred();
+          d.resolve(createdTodo);
+          return d.promise();
+       });
+       var $removeTodo = $('#removeTodo');
+       $removeTodo.click();
+       expect($.ajax).toHaveBeenCalled();
     });
   });
 
   describe('checking off a todo item', function() {
     it('should mark that item as completed', function() {
-      pending();
+      spyOn($, 'ajax').and.callFake(function (req) {
+        expect(req.url).toEqual('/todos/' + todos[0].id + '.json');
+        var d = $.Deferred();
+        d.resolve(createdTodo);
+        return d.promise();
+      });
+      $('#todo_completed').click();
+      expect($.ajax).toHaveBeenCalled();
     });
   });
 });

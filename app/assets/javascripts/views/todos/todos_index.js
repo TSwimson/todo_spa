@@ -25,19 +25,23 @@ SpaApp.Views.TodosIndex = Backbone.View.extend({
   add_todo: function(event) {
     var _this = this;
     event.preventDefault();
-    var new_todo = {
-      title: $('#todo_title').val(),
-      completed: false
-    };
-    $.ajax({
-      method: 'post',
-      url   : '/todos.json',
-      data  : {todo: new_todo}
-    }).done(function(responseData){
-      var todoHTML = HandlebarsTemplates['todos/show'](responseData);
-      _this.$el.append(todoHTML);
-    });
+    if ($('#todo_title').val().length > 0) {
+      var new_todo = {
+        title: $('#todo_title').val(),
+        completed: false
+      };
+      $.ajax({
+        method: 'post',
+        url   : '/todos.json',
+        data  : {todo: new_todo}
+      }).done(function(responseData){
+        $('#todo_title').val('');
+        var todoHTML = HandlebarsTemplates['todos/show'](responseData);
+        _this.$el.append(todoHTML);
+      });
+    }
   },
+
   remove_todo: function(event) {
     event.preventDefault();
     var _event = event;
@@ -49,6 +53,7 @@ SpaApp.Views.TodosIndex = Backbone.View.extend({
       _event.target.parentElement.remove();
     });
   },
+
   check_todo: function(event) {
     var parent = event.target.parentElement.parentElement;
     var id = $(parent).attr('data-id');
